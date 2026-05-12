@@ -6,21 +6,16 @@
     "module": "esnext",
     "types": ["node"],
     "skipLibCheck": true,
-    // File Layout
-    "rootDir": "./src",
-    "outDir": "./dist",
-    "paths": {
-      "@/*": ["./src/*"]
-    },
 
-    /* Bundler mode */
+    "rootDir": ".",
+    "outDir": "./dist-node",
+
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": true,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "noEmit": true,
 
-    /* Linting */
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "erasableSyntaxOnly": true,
