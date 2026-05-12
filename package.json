@@ -1,0 +1,48 @@
+{
+  "name": "refloor-room-builder",
+  "private": true,
+  "workspaces": [
+    "packages/core"
+  ],
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint:all": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\"",
+    "lint:fix": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\" --fix",
+
+    "prettier:check": "prettier --check \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "prettier:write": "prettier --write \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+
+    "build:core": "npm run build -w packages/core && npm run api:extract -w packages/core",
+    "build:app": "tsc -b && vite build",
+    "build": "npm run build:core && npm run build:app",
+
+    "verify": "npm run lint:all && npm run prettier:check && npm run build"
+  },
+  "author": "a1unade",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^19.2.6",
+    "react-dom": "^19.2.6",
+    "@refloor/core": "1.0.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^24.12.3",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.1",
+    "eslint": "^10.3.0",
+    "prettier": "^3.6.2",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.5.2",
+    "eslint-plugin-prettier": "^5.5.4",
+    "@typescript-eslint/eslint-plugin": "^8.44.1",
+    "@typescript-eslint/parser": "^8.44.1",
+    "globals": "^17.6.0",
+    "typescript": "~6.0.2",
+    "typescript-eslint": "^8.59.2",
+    "vite": "^8.0.12"
+  }
+}

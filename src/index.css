@@ -1,0 +1,154 @@
+/* --------------- IMPORT STYLES --------------- */
+
+@import 'assets/styles/viewer.css';
+
+/* --------------------------------------------- */
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+}
+
+html,
+body,
+#root {
+  width: 100%;
+  height: 100vh;
+}
+
+:root {
+  width: 100%;
+  height: 100%;
+  line-height: 1.5;
+  font-weight: 400;
+  font-family: 'Manrope', sans-serif;
+  color: #0f0f0f;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+span,
+input {
+  font-family: 'Manrope', system-ui, sans-serif;
+  color: var(--text-primary);
+  font-kerning: normal;
+  font-variant-ligatures: normal;
+  font-synthesis: none;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0;
+}
+
+:root {
+  --text-color: #ffffff;
+  --bg-main: #222222;
+  --bg-secondary: #292929;
+  --bg-tertiary: #2f2f2f;
+  --border: #3a3a3a;
+
+  --text-primary: #e6e6e6;
+  --text-secondary: #b3b3b3;
+  --text-disabled: #6e6e6e;
+
+  --accent-primary: #4a90e2;
+  --accent-success: #53d86a;
+  --accent-warning: #e5c04d;
+  --accent-error: #d64545;
+
+  --hover: #3d3d3d;
+  --active: #4a4a4a;
+}
+
+:root {
+  --text-primary: #111111;
+  --text-secondary: #666666;
+  --background-primary: #f6f6f6;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--background-primary);
+  color: var(--text-primary);
+  font-family: 'Manrope Variable', Manrope, system-ui, sans-serif;
+  font-kerning: normal;
+  font-variant-ligatures: normal;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  letter-spacing: 0;
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+  margin-block-start: 0;
+  margin-block-end: 0;
+}
+
+:root {
+  width: 100%;
+  height: 100%;
+  line-height: 1.5;
+  font-weight: 400;
+  background-color: #ffffff;
+  font-family: 'Manrope', sans-serif;
+  color: #0f0f0f;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  --expanded-height: 0px;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+}
