@@ -7,12 +7,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint src --ext .ts,.js",
-    "lint:fix": "eslint src --ext .ts,.js --fix",
-    "format": "prettier --write 'src/**/*.{ts,js,json}'",
-    "preview": "vite preview"
+    "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
+    "lint:all": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\"",
+    "lint:fix": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\" --fix",
+
+    "prettier:check": "prettier --check \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+    "prettier:write": "prettier --write \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx,json,css,scss,md}\"",
+
+    "build:core": "npm run build -w packages/core && npm run api:extract -w packages/core",
+    "build:app": "tsc -b && vite build",
+    "build": "npm run build:core && npm run build:app",
+
+    "verify": "npm run lint:all && npm run prettier:check && npm run build"
   },
   "author": "a1unade",
   "license": "MIT",
