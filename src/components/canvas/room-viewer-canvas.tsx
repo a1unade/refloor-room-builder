@@ -22,6 +22,12 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { setHub } = useRoomViewerHubContext();
 
+  const room = {
+    width: 5,
+    height: 3,
+    length: 6,
+  };
+
   useEffect(() => {
     if (!canvasRef.current) return;
 
@@ -35,6 +41,7 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
       start: () => appHub.start(),
       resizeRenderer: () => appHub.resizeRenderer(),
       stop: () => appHub.stop(),
+      buildWalls: (params) => appHub.buildWalls(params),
     };
 
     setHub(api);
@@ -51,6 +58,7 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
 
     handleResize();
     api.start();
+    api.buildWalls(room);
     window.addEventListener('resize', handleResize);
 
     return () => {

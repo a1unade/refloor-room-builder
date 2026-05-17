@@ -7,6 +7,8 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
+    "dev": "vite",
+
     "lint": "eslint \"src/**/*.{ts,tsx,js,jsx}\"",
     "lint:all": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\"",
     "lint:fix": "eslint \"{src,packages/*/src}/**/*.{ts,tsx,js,jsx}\" --fix",

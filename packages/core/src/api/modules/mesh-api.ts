@@ -8,14 +8,6 @@ import type { IMeshApi } from '@/interfaces/api';
 /**
  * API для управления мешами (фигурами) на сцене.
  *
- * **Назначение:**
- * - Предоставляет хендлерам и менеджерам унифицированный интерфейс для работы с мешами
- * - Скрывает конкретную реализацию {@link `SceneModule`}
- *
- * **Используется:**
- * - Хендлерами инструментов ({@link `TranslateToolHandler`}, {@link `RotateToolHandler`} и др.)
- * - Хэндлерами сцены при необходимости получить список мешей
- *
  * @see {@link IMeshApi} - интерфейс, который реализует этот класс
  * @see {@link SceneModule} - реальная реализация операций с мешами
  *
@@ -27,23 +19,23 @@ export class MeshApi implements IMeshApi {
   /** @constructor */
   public constructor(@inject('SceneModule') private readonly _sceneModule: IMeshApi) {}
 
-  public addMesh(mesh: THREE.Mesh): void {
-    this._sceneModule.addMesh(mesh);
+  public addObject(object: THREE.Object3D): void {
+    this._sceneModule.addObject(object);
   }
 
-  public addMeshes(meshes: THREE.Mesh[]): void {
-    this._sceneModule.addMeshes(meshes);
+  public addObjects(meshes: THREE.Object3D[]): void {
+    this._sceneModule.addObjects(meshes);
   }
 
-  public removeMesh(mesh: THREE.Mesh): void {
-    this._sceneModule.removeMesh(mesh);
+  public removeObject(mesh: THREE.Object3D): void {
+    this._sceneModule.removeObject(mesh);
   }
 
-  public removeMeshes(meshes: THREE.Mesh[]): void {
-    this._sceneModule.removeMeshes(meshes);
+  public removeObjects(meshes: THREE.Object3D[]): void {
+    this._sceneModule.removeObjects(meshes);
   }
 
-  public getMeshes(): THREE.Mesh[] {
-    return this._sceneModule.getMeshes();
+  public getObjects(): THREE.Object3D[] {
+    return this._sceneModule.getObjects();
   }
 }

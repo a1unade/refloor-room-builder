@@ -106,6 +106,7 @@ export class Renderer
       alpha: this._config.background.transparent || this._config.renderer.alpha,
     });
     this.renderer.setSize(this.canvas.clientWidth, this.canvas.clientHeight);
+    this.renderer.localClippingEnabled = true;
 
     if (this._config.background.transparent) {
       this.renderer.setClearAlpha(0);

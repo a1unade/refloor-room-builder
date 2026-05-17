@@ -2,8 +2,8 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
     "target": "ESNext",
+    "moduleResolution": "node",
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
     "esModuleInterop": true,
