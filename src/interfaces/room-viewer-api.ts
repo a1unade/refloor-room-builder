@@ -1,5 +1,5 @@
 // Types
-import type { RoomParams } from '@refloor/core/dist/src/types/room';
+import type { RoomParams } from '@refloor/core';
 
 export interface IRoomViewerApi {
   resizeRenderer(): void;
