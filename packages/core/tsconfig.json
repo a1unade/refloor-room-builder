@@ -3,11 +3,13 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ESNext",
+    "moduleResolution": "node",
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     // File Layout
+    "rootDir": "./src",
     "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"]
