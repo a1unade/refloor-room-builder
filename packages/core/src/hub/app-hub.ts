@@ -4,11 +4,13 @@ import type { Renderer } from '@/core';
 import { type Disposable, inject, injectable } from 'tsyringe';
 // Interfaces
 import type { IWorker } from '@/interfaces/worker';
-import type { RoomParams } from '@/types/room';
 import type { IBuilder } from '@/interfaces/builder';
+// Types
+import type { RoomEstimate, RoomParams } from '@/types/room';
 
 /**
- * Хаб для управления приложением
+ * Хаб для управления приложением.
+ *
  * @public
  */
 @injectable()
@@ -21,21 +23,59 @@ export class AppHub implements Disposable {
     @inject('BaseboardBuilder') private _baseboardBuilder: IBuilder,
   ) {}
 
-  public resizeRenderer() {
+  public resizeRenderer(): void {
     this._renderer.resize();
   }
 
-  public buildWalls(params: RoomParams) {
+  /**
+   * Полностью перестраивает комнату и возвращает расчёты материалов.
+   *
+   * @param params - Параметры комнаты.
+   * @returns Расчёты пола и плинтуса.
+   *
+   * @public
+   */
+  public buildRoom(params: RoomParams): RoomEstimate {
+    this.clearRoom();
+
     this._wallBuilder.build(params);
     this._floorBuilder.build(params);
     this._baseboardBuilder.build(params);
-    const res = this._floorBuilder.estimate(params);
-    console.log(res);
+
+    return this.estimateRoom(params);
+  }
+
+  /**
+   * Возвращает расчёты материалов без перестроения сцены.
+   *
+   * @param params - Параметры комнаты.
+   * @returns Расчёты пола и плинтуса.
+   *
+   * @public
+   */
+  public estimateRoom(params: RoomParams): RoomEstimate {
+    return {
+      planksCount: this._floorBuilder.estimate(params),
+      baseboardLength: this._baseboardBuilder.estimate(params),
+    };
+  }
+
+  /**
+   * Очищает все части комнаты из сцены.
+   *
+   * @public
+   */
+  public clearRoom(): void {
+    this._wallBuilder.clear();
+    this._floorBuilder.clear();
+    this._baseboardBuilder.clear();
   }
 
   /**
    * Запускает редактор.
    * Вызывается после создания хаба.
+   *
+   * @public
    */
   public start(): void {
     this._worker.start();
@@ -43,12 +83,16 @@ export class AppHub implements Disposable {
 
   /**
    * Останавливает редактор.
+   *
+   * @public
    */
   public stop(): void {
     this._worker.stop();
   }
 
-  public dispose(): Promise<void> | void {
+  public dispose(): void {
+    this.clearRoom();
+
     this._worker.dispose();
     this._renderer.dispose();
   }
