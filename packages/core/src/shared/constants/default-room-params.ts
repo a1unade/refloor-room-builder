@@ -4,9 +4,25 @@ import { FloorLayout } from '@/types/room';
 /**
  * Дефолтные константы для настроек комнаты
  *
- * @const
+ * @public
  */
 export const defaultRoomParams = {
+  /**
+   * Длина комнаты в метрах.
+   *
+   * @public
+   * @member
+   */
+  length: 6,
+
+  /**
+   * Ширина комнаты в метрах.
+   *
+   * @public
+   * @member
+   */
+  width: 5,
+
   /**
    * Высота комнаты в метрах.
    *

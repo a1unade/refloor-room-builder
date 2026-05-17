@@ -13,7 +13,7 @@ interface ViewerCanvasProps {
   config?: RendererConfigInput;
 }
 
-export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
+export const RoomViewerCanvas: React.FC<ViewerCanvasProps> = ({
   className,
   width = 1000,
   height = 1000,
@@ -21,12 +21,6 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const { setHub } = useRoomViewerHubContext();
-
-  const room = {
-    width: 5,
-    height: 3,
-    length: 6,
-  };
 
   useEffect(() => {
     if (!canvasRef.current) return;
@@ -41,7 +35,7 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
       start: () => appHub.start(),
       resizeRenderer: () => appHub.resizeRenderer(),
       stop: () => appHub.stop(),
-      buildWalls: (params) => appHub.buildWalls(params),
+      buildRoom: (params) => appHub.buildRoom(params),
     };
 
     setHub(api);
@@ -58,7 +52,7 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
 
     handleResize();
     api.start();
-    api.buildWalls(room);
+
     window.addEventListener('resize', handleResize);
 
     return () => {
@@ -67,9 +61,9 @@ export const ViewerCanvas: React.FC<ViewerCanvasProps> = ({
       appHub.dispose();
       setHub(null);
     };
-  }, [setHub]);
+  }, [config, setHub]);
 
   return <canvas ref={canvasRef} className={className} width={width} height={height} />;
 };
 
-export default ViewerCanvas;
+export default RoomViewerCanvas;
