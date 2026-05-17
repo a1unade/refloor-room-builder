@@ -7,19 +7,54 @@ import type { IBuilder } from '@/interfaces/builder';
 import type { IMeshApi } from '@/interfaces/api';
 // Types
 import { FloorLayout, type PlankInstance, type RoomParams } from '@/types/room';
-import { defaultRoomParams, sceneObjectNames } from '@/shared/constants';
+// Constants
+import { defaultRoomParams, groupNames, sceneObjectNames } from '@/shared/constants';
 
+/**
+ * Билдер для создания пола.
+ *
+ * @remarks
+ * Отвечает за добавление пола на сцену, покраску швов и досок, подсчет количества досок.
+ *
+ * @public
+ * @class
+ */
 @injectable()
 export class FloorBuilder implements IBuilder {
+  /**
+   * Группа, содержащая весь пол комнаты
+   *
+   * @private
+   * @member
+   */
   private readonly group = new THREE.Group();
 
+  /**
+   * Материал подложки (цвет зазоров)
+   *
+   * @private
+   * @member
+   */
   private floorMaterial: THREE.MeshStandardMaterial | null = null;
+
+  /**
+   * Материал доски
+   *
+   * @private
+   * @member
+   */
   private plankMaterial: THREE.MeshStandardMaterial | null = null;
 
+  /**
+   * Геометрии, созданные билдером
+   *
+   * @private
+   * @member
+   */
   private readonly geometries = new Set<THREE.BufferGeometry>();
 
   public constructor(@inject('IMeshApi') private _api: IMeshApi) {
-    this.group.name = 'FloorBuilder';
+    this.group.name = groupNames.FLOOR;
   }
 
   public build(params: RoomParams): void {
@@ -89,6 +124,12 @@ export class FloorBuilder implements IBuilder {
     });
   }
 
+  /**
+   * Создаёт плоскости отсечения для ограничения пола границами комнаты.
+   *
+   * @private
+   * @method
+   */
   private createRoomClippingPlanes(params: RoomParams): THREE.Plane[] {
     const wallGap = params.floorWallGap ?? defaultRoomParams.floorWallGap;
 
@@ -106,6 +147,12 @@ export class FloorBuilder implements IBuilder {
     ];
   }
 
+  /**
+   * Создание подложки для пола
+   *
+   * @private
+   * @method
+   */
   private createFloorBase(params: RoomParams): void {
     const geometry = new THREE.PlaneGeometry(params.width, params.length);
     this.geometries.add(geometry);
@@ -120,6 +167,12 @@ export class FloorBuilder implements IBuilder {
     this.group.add(mesh);
   }
 
+  /**
+   * Создание досок для пола
+   *
+   * @private
+   * @method
+   */
   private createPlanks(params: RoomParams): void {
     const plankLength = params.plankLength ?? defaultRoomParams.plankLength;
     const plankWidth = params.plankWidth ?? defaultRoomParams.plankWidth;
@@ -161,6 +214,12 @@ export class FloorBuilder implements IBuilder {
     this.group.add(mesh);
   }
 
+  /**
+   * Генерация прямой раскладки
+   *
+   * @private
+   * @method
+   */
   private generateStraightPlanks(
     params: RoomParams,
     plankLength: number,
@@ -221,6 +280,12 @@ export class FloorBuilder implements IBuilder {
     return planks;
   }
 
+  /**
+   * Генерация раскладки ёлочкой
+   *
+   * @private
+   * @method
+   */
   private generateHerringbonePlanks(
     params: RoomParams,
     plankLength: number,
@@ -289,6 +354,12 @@ export class FloorBuilder implements IBuilder {
     return planks;
   }
 
+  /**
+   * Проверка пересечения пола со стеной
+   *
+   * @private
+   * @method
+   */
   private plankIntersectsRoom(
     plank: PlankInstance,
     params: RoomParams,
@@ -331,6 +402,12 @@ export class FloorBuilder implements IBuilder {
     return !separated;
   }
 
+  /**
+   * Получение материала подложки
+   *
+   * @private
+   * @method
+   */
   private getFloorMaterial(): THREE.MeshStandardMaterial {
     if (!this.floorMaterial) {
       throw new Error('Floor material is not initialized.');
@@ -339,6 +416,12 @@ export class FloorBuilder implements IBuilder {
     return this.floorMaterial;
   }
 
+  /**
+   * Получение материала для досок
+   *
+   * @private
+   * @method
+   */
   private getPlankMaterial(): THREE.MeshStandardMaterial {
     if (!this.plankMaterial) {
       throw new Error('Plank material is not initialized.');
@@ -347,6 +430,12 @@ export class FloorBuilder implements IBuilder {
     return this.plankMaterial;
   }
 
+  /**
+   * Возвращает рабочие границы пола с учётом теплового зазора у стен.
+   *
+   * @private
+   * @method
+   */
   private getFloorBounds(params: RoomParams): {
     minX: number;
     maxX: number;

@@ -6,23 +6,47 @@ import { inject, injectable } from 'tsyringe';
 import type { IBuilder } from '@/interfaces/builder';
 import type { IMeshApi } from '@/interfaces/api';
 // Types
-import type { RoomParams } from '@/types/room';
+import type { RoomParams, BaseboardProfilePoint } from '@/types/room';
+// Constants
+import { defaultRoomParams, groupNames, sceneObjectNames } from '@/shared/constants';
 
-type BaseboardProfilePoint = {
-  depth: number;
-  y: number;
-};
-
+/**
+ * Билдер для создания плинтуса.
+ *
+ * @remarks
+ * Отвечает за добавление плинтуса на сцену, покраску, подсчет погонажа.
+ *
+ * @public
+ * @class
+ */
 @injectable()
 export class BaseboardBuilder implements IBuilder {
+  /**
+   * Группа, содержащая все плинтусы комнаты
+   *
+   * @private
+   * @member
+   */
   private readonly group = new THREE.Group();
 
+  /**
+   * Материал плинтусов
+   *
+   * @private
+   * @member
+   */
   private material: THREE.MeshStandardMaterial | null = null;
 
+  /**
+   * Геометрии, созданные билдером
+   *
+   * @private
+   * @member
+   */
   private readonly geometries = new Set<THREE.BufferGeometry>();
 
   public constructor(@inject('IMeshApi') private readonly api: IMeshApi) {
-    this.group.name = 'BaseboardBuilder';
+    this.group.name = groupNames.BASEBOARD;
   }
 
   public build(params: RoomParams): void {
@@ -35,44 +59,19 @@ export class BaseboardBuilder implements IBuilder {
 
     const height = params.baseboardHeight ?? 0.08;
 
-    /**
-     * Высота готового пола:
-     * 0.025 — толщина доски
-     * 0.002 — небольшой offset над базовой плоскостью.
-     */
+    // Высота готового пола: 0.025 — толщина доски, 0.002 — небольшой offset над базовой плоскостью.
     const floorTop = 0.027;
+    // Небольшой заход вниз, чтобы не было видимой щели
+    const verticalOverlap =
+      params.baseboardVerticalOverlap ?? defaultRoomParams.baseboardVerticalOverlap;
 
-    /**
-     * Тепловой зазор пола у стен.
-     *
-     * Плинтус должен быть глубже этого зазора,
-     * чтобы закрывать край покрытия.
-     */
-    const floorWallGap = params.floorWallGap ?? 0.02;
-
-    /**
-     * Насколько плинтус дополнительно заходит на пол
-     * после перекрытия теплового зазора.
-     */
-    const coverOverlap = params.baseboardCoverOverlap ?? 0.012;
-
-    /**
-     * Небольшой заход вниз, чтобы не было видимой щели
-     * между плинтусом и покрытием пола.
-     */
-    const verticalOverlap = params.baseboardVerticalOverlap ?? 0.003;
-
-    const thickness = params.baseboardThickness ?? floorWallGap + coverOverlap;
+    const thickness = params.baseboardThickness ?? defaultRoomParams.baseboardThickness;
     const baseY = floorTop - verticalOverlap;
 
-    /**
-     * Чуть сдвигаем плинтус внутрь комнаты,
-     * чтобы избежать z-fighting со стеной.
-     */
-    const wallInset = params.baseboardWallInset ?? 0.002;
+    const wallInset = params.baseboardWallInset ?? defaultRoomParams.baseboardWallInset;
 
     const backBaseboard = this.createBaseboard({
-      name: 'BackBaseboard',
+      name: sceneObjectNames.BACK_BASEBOARD,
       length: width,
       height,
       thickness,
@@ -81,7 +80,7 @@ export class BaseboardBuilder implements IBuilder {
     });
 
     const frontBaseboard = this.createBaseboard({
-      name: 'FrontBaseboard',
+      name: sceneObjectNames.FRONT_BASEBOARD,
       length: width,
       height,
       thickness,
@@ -90,7 +89,7 @@ export class BaseboardBuilder implements IBuilder {
     });
 
     const leftBaseboard = this.createBaseboard({
-      name: 'LeftBaseboard',
+      name: sceneObjectNames.LEFT_BASEBOARD,
       length,
       height,
       thickness,
@@ -99,7 +98,7 @@ export class BaseboardBuilder implements IBuilder {
     });
 
     const rightBaseboard = this.createBaseboard({
-      name: 'RightBaseboard',
+      name: sceneObjectNames.RIGHT_BASEBOARD,
       length,
       height,
       thickness,
@@ -219,12 +218,7 @@ export class BaseboardBuilder implements IBuilder {
     const vertices: number[] = [];
     const indices: number[] = [];
 
-    /**
-     * 45-градусный запил:
-     * чем дальше точка профиля от стены, тем сильнее она сдвигается
-     * от края по длине. Так торец получается скошенным, а углы —
-     * аккуратно состыкованными.
-     */
+    // 45-градусный запил
     for (const point of profile) {
       const startX = -length / 2 + point.depth;
       const endX = length / 2 - point.depth;
@@ -233,9 +227,7 @@ export class BaseboardBuilder implements IBuilder {
       vertices.push(endX, point.y, point.depth);
     }
 
-    /**
-     * Боковые поверхности вдоль профиля.
-     */
+    // Боковые поверхности вдоль профиля
     for (let i = 0; i < profile.length; i++) {
       const nextIndex = (i + 1) % profile.length;
 
@@ -249,16 +241,12 @@ export class BaseboardBuilder implements IBuilder {
       indices.push(startA, endB, startB);
     }
 
-    /**
-     * Стартовый скошенный торец.
-     */
+    // Стартовый скошенный торец
     for (let i = 1; i < profile.length - 1; i++) {
       indices.push(0, i * 2, (i + 1) * 2);
     }
 
-    /**
-     * Конечный скошенный торец.
-     */
+    // Конечный скошенный торец
     for (let i = 1; i < profile.length - 1; i++) {
       indices.push(1, (i + 1) * 2 + 1, i * 2 + 1);
     }
@@ -273,6 +261,12 @@ export class BaseboardBuilder implements IBuilder {
     return geometry;
   }
 
+  /**
+   * Получение материала для стен
+   *
+   * @private
+   * @method
+   */
   private getMaterial(): THREE.MeshStandardMaterial {
     if (!this.material) {
       throw new Error('Baseboard material is not initialized.');
