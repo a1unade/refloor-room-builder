@@ -216,18 +216,12 @@
   }
 
   .room-controls__header {
-    padding:
-      max(18px, env(safe-area-inset-top))
-      18px
-      14px;
+    padding: max(18px, env(safe-area-inset-top)) 18px 14px;
   }
 
   .room-controls__content {
     max-height: calc(100dvh - 82px - env(safe-area-inset-top));
-    padding:
-      16px
-      18px
-      max(18px, env(safe-area-inset-bottom));
+    padding: 16px 18px max(18px, env(safe-area-inset-bottom));
     gap: 16px;
   }
 
