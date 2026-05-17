@@ -21,4 +21,9 @@ export const sceneObjectNames = {
 
   /** Доски пола */
   FLOOR_PLANKS: 'FloorPlanks',
+
+  BACK_BASEBOARD: 'BackBaseboard',
+  FRONT_BASEBOARD: 'FrontBaseboard',
+  LEFT_BASEBOARD: 'LeftBaseboard',
+  RIGHT_BASEBOARD: 'RightBaseboard',
 };
