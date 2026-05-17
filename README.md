@@ -1,73 +1,129 @@
-# React + TypeScript + Vite
+[![build](https://github.com/a1unade/refloor-room-builder/actions/workflows/build.yml/badge.svg)](https://github.com/a1unade/refloor-room-builder/actions/workflows/build.yml)
+[![deploy](https://github.com/a1unade/refloor-room-builder/actions/workflows/deploy.yml/badge.svg)](https://github.com/a1unade/refloor-room-builder/actions/workflows/deploy.yml)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Интерактивная 3D-сцена комнаты с настройкой размеров помещения, визуализацией стен, пола, плинтуса и автоматическим расчётом материалов.
 
-Currently, two official plugins are available:
+Проект реализован на **React**, **TypeScript** и **Three.js**.  
+Основная 3D-логика вынесена в локальный пакет `@refloor/core`, а React-приложение отвечает за UI и взаимодействие с пользователем.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Demo
 
-## React Compiler
+GitHub Pages: https://a1unade.github.io/refloor-room-builder/
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Возможности
 
-## Expanding the ESLint configuration
+- построение 3D-комнаты по параметрам:  
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+  - длина;  
+  
+  - ширина;  
+  
+  - высота;  
+  
+- отображение стен с материалом покраски;  
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+- построение пола с отдельными плашками;  
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+- поддержка двух типов раскладки:  
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+  - прямая палубная раскладка;  
+  
+  - ёлочка / herringbone;  
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+- зазоры между досками;
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- тепловой зазор между полом и стенами;  
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+- плинтус по периметру комнаты;  
+
+- аккуратное примыкание плинтуса в углах;  
+
+- расчёт количества плашек пола;  
+
+- расчёт погонажа плинтуса;  
+
+- управление камерой через OrbitControls;  
+
+- адаптивная панель управления;  
+
+- слайдеры для изменения параметров комнаты;  
+
+- оптимизация пола через `InstancedMesh`.
+
+## Технологии
+
+- `React`  
+
+- `TypeScript`  
+
+- `Three.js`
+
+- `Vite`
+
+- `Fluent UI`
+
+- `tsyringe`
+
+- `GitHub Actions`
+
+- `GitHub Pages`
+
+## Основные допущения
+
+- Единица измерения в 3D-сцене соответствует одному метру.  
+
+- Размер плашки пола по умолчанию: 600 × 100 мм.  
+
+- Толщина плашки используется только для визуализации.  
+
+- Количество плашек рассчитывается по площади пола и площади одной плашки.  
+
+- Для раскладки ёлочкой применяется повышающий коэффициент запаса.  
+
+- Тепловой зазор у стен учитывается при генерации пола.  
+
+- Плинтус визуально перекрывает тепловой зазор.
+
+- Подрезка плашек у границ комнаты визуально ограничивается областью пола.  
+
+- Расчёт погонажа плинтуса выполняется по периметру комнаты.  
+
+- Расчёт краски не используется в итоговом UI, так как основной расчёт в текущей версии сфокусирован на напольном покрытии и плинтусе.
+
+## Архитектура
+
+В проекте используется разделение на React-приложение и 3D-ядро.
+
+`@refloor/core` отвечает за:
+
+- создание renderer;
+
+- управление сценой;
+
+- управление камерой и `OrbitControls`;
+
+- построение стен;
+
+- построение пола;
+
+- построение плинтуса;
+
+- расчёты материалов;
+
+- публичный API через `AppHub`.
+
+React-приложение отвечает за:
+
+- canvas;
+
+- панель управления;
+
+- ввод параметров;
+
+- отображение расчётов;
+
+- обновление сцены при изменении параметров.
+
+Такой подход позволяет отделить Three.js-логику от UI и упростить поддержку проекта.
+
+<img src="./materials/1.png" alt="архитектура ядра">
