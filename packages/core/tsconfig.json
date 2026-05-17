@@ -2,14 +2,12 @@
   // Visit https://aka.ms/tsconfig to read more about this file
   "compilerOptions": {
     "module": "ESNext",
-    "moduleResolution": "node",
     "target": "ESNext",
     "lib": ["ESNext", "DOM"],
     "types": ["node"],
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
     // File Layout
-    "rootDir": "./src",
     "outDir": "./dist",
     "paths": {
       "@/*": ["./src/*"]

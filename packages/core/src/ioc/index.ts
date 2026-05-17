@@ -12,6 +12,9 @@ import { ControlsModule, SceneModule } from '@/modules';
 // Interfaces
 import type { IMeshApi, ICameraApi, IDomApi, ISceneApi } from '@/interfaces/api';
 import type { IWorker } from '@/interfaces/worker';
+import type { IBuilder } from '@/interfaces/builder';
+// Builders
+import { WallBuilder, FloorBuilder, BaseboardBuilder } from '@/builders';
 // Types
 import type { RendererConfigInput } from '@/types/renderer';
 // Shared
@@ -49,18 +52,23 @@ export function createContainer(
   container.register('IRendererDomAccess', { useToken: 'Renderer' });
   container.register('IRendererSceneAccess', { useToken: 'Renderer' });
 
+  // Modules
+  container.registerSingleton('ControlsModule', ControlsModule);
+  container.registerSingleton('SceneModule', SceneModule);
+
   // API
   container.registerSingleton<IMeshApi>('IMeshApi', MeshApi);
   container.registerSingleton<ICameraApi>('ICameraApi', CameraApi);
   container.registerSingleton<IDomApi>('IDomApi', DomApi);
   container.registerSingleton<ISceneApi>('ISceneApi', SceneApi);
 
-  // Modules
-  container.registerSingleton('ControlsModule', ControlsModule);
-  container.registerSingleton('SceneModule', SceneModule);
-
   container.register('IUpdatableModule', { useToken: 'ControlsModule' });
   container.register('IRuntimeModule', { useToken: 'SceneModule' });
+
+  // Builders
+  container.registerSingleton<IBuilder>('WallBuilder', WallBuilder);
+  container.registerSingleton<IBuilder>('FloorBuilder', FloorBuilder);
+  container.registerSingleton<IBuilder>('BaseboardBuilder', BaseboardBuilder);
 
   // Hub
   container.registerSingleton('AppHub', AppHub);

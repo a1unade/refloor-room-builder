@@ -2,59 +2,56 @@
 import * as THREE from 'three';
 
 /**
- * API для управления мешами (фигурами) на сцене.
+ * API для управления фигурами и объектами на сцене.
  *
  * @internal
  * @interface
  */
 export interface IMeshApi {
   /**
-   * Добавляет один меш на сцену.
+   * Добавляет произвольный объект в сцену.
    *
-   * @param mesh - меш для добавления
-   *
-   * @internal
-   * @method
+   * @param object - Three.js объект для добавления.
    */
-  addMesh(mesh: THREE.Mesh): void;
+  addObject(object: THREE.Object3D): void;
 
   /**
-   * Добавляет несколько мешей на сцену за один вызов.
+   * Удаляет произвольный объект из сцены.
    *
-   * @param meshes - массив мешей для добавления
+   * @param object - Three.js объект для удаления.
    *
    * @internal
    * @method
    */
-  addMeshes(meshes: THREE.Mesh[]): void;
+  removeObject(object: THREE.Object3D): void;
 
   /**
-   * Удаляет один меш со сцены.
+   * Добавляет несколько объектов в сцену.
    *
-   * @param mesh - меш для удаления
+   * @param objects - Список Three.js объектов.
    *
    * @internal
    * @method
    */
-  removeMesh(mesh: THREE.Mesh): void;
+  addObjects(objects: THREE.Object3D[]): void;
 
   /**
-   * Удаляет несколько мешей со сцены за один вызов.
+   * Удаляет несколько объектов из сцены.
    *
-   * @param meshes - массив мешей для удаления
+   * @param objects - Список Three.js объектов.
    *
    * @internal
    * @method
    */
-  removeMeshes(meshes: THREE.Mesh[]): void;
+  removeObjects(objects: THREE.Object3D[]): void;
 
   /**
-   * Возвращает список всех мешей, находящихся на сцене.
+   * Возвращает все объекты, добавленные через данный API.
    *
-   * @returns массив мешей
+   * @returns Список объектов сцены.
    *
    * @internal
    * @method
    */
-  getMeshes(): THREE.Mesh[];
+  getObjects(): THREE.Object3D[];
 }

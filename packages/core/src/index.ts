@@ -12,3 +12,4 @@ export * from '@/interfaces/api/renderer';
 // Types
 export * from '@/types/renderer';
 export * from '@/types/common';
+export * from '@/types/room';

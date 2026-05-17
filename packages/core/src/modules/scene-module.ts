@@ -15,8 +15,8 @@ import type { ISceneApi, IMeshApi } from '@/interfaces/api';
  */
 @injectable()
 export class SceneModule implements IRuntimeModule, IMeshApi {
-  /** Объекты сцены */
-  private _meshes: THREE.Mesh[] = [];
+  /** Объекты, добавленные в сцену через модуль */
+  private _objects: THREE.Object3D[] = [];
 
   /** Сетка сцены */
   private _grid: THREE.GridHelper | null = null;
@@ -37,47 +37,48 @@ export class SceneModule implements IRuntimeModule, IMeshApi {
     this._api.addToScene(this._light);
   }
 
-  public getMeshes(): THREE.Mesh[] {
-    return this._meshes;
+  public getObjects(): THREE.Object3D[] {
+    return this._objects;
   }
 
-  public addMesh(mesh: THREE.Mesh): void {
+  public addObject(object: THREE.Object3D): void {
     // Пропуск дубликатов
-    if (this._meshes.includes(mesh)) return;
+    if (this._objects.includes(object)) return;
 
-    this._meshes.push(mesh);
-    this._api.addToScene(mesh);
+    this._objects.push(object);
+    this._api.addToScene(object);
   }
 
-  public removeMesh(mesh: THREE.Mesh): void {
-    const index = this._meshes.indexOf(mesh);
+  public removeObject(object: THREE.Object3D): void {
+    const index = this._objects.indexOf(object);
 
     if (index >= 0) {
-      this._meshes.splice(index, 1);
+      this._objects.splice(index, 1);
     }
 
-    this._api.removeFromScene(mesh);
+    this._api.removeFromScene(object);
   }
 
-  public addMeshes(meshes: THREE.Mesh[]): void {
-    for (const mesh of meshes) {
-      this.addMesh(mesh);
+  public addObjects(objects: THREE.Object3D[]): void {
+    for (const object of objects) {
+      this.addObject(object);
     }
   }
 
-  public removeMeshes(meshes: THREE.Mesh[]): void {
-    for (const mesh of meshes) {
-      this.removeMesh(mesh);
+  public removeObjects(objects: THREE.Object3D[]): void {
+    for (const object of objects) {
+      this.removeObject(object);
     }
   }
 
   /** Освобождает ресурсы модуля */
   public dispose(): Promise<void> | void {
     // Объекты сцены
-    for (const mesh of this._meshes) {
-      this._api.removeFromScene(mesh);
+    for (const object of this._objects) {
+      this._api.removeFromScene(object);
     }
-    this._meshes.length = 0;
+
+    this._objects.length = 0;
 
     // Сетка
     if (this._grid) {

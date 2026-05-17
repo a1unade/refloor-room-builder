@@ -4,6 +4,8 @@ import type { Renderer } from '@/core';
 import { type Disposable, inject, injectable } from 'tsyringe';
 // Interfaces
 import type { IWorker } from '@/interfaces/worker';
+import type { RoomParams } from '@/types/room';
+import type { IBuilder } from '@/interfaces/builder';
 
 /**
  * Хаб для управления приложением
@@ -14,10 +16,21 @@ export class AppHub implements Disposable {
   public constructor(
     @inject('Renderer') private _renderer: Renderer,
     @inject('IWorker') private _worker: IWorker,
+    @inject('WallBuilder') private _wallBuilder: IBuilder,
+    @inject('FloorBuilder') private _floorBuilder: IBuilder,
+    @inject('BaseboardBuilder') private _baseboardBuilder: IBuilder,
   ) {}
 
   public resizeRenderer() {
     this._renderer.resize();
+  }
+
+  public buildWalls(params: RoomParams) {
+    this._wallBuilder.build(params);
+    this._floorBuilder.build(params);
+    this._baseboardBuilder.build(params);
+    const res = this._floorBuilder.estimate(params);
+    console.log(res);
   }
 
   /**
